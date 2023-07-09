@@ -1,13 +1,16 @@
 import { Logger, NotFoundException } from '@nestjs/common';
 import { AbstractDatabaseSchema } from './database.schema';
-import { FilterQuery, Model, Types, UpdateQuery } from 'mongoose';
+import { Connection, FilterQuery, Model, Types, UpdateQuery } from 'mongoose';
 import { CreateIndexesOptions } from 'mongodb';
 
 export abstract class AbstractDatabaseRepository<
   TDocument extends AbstractDatabaseSchema,
 > {
   protected abstract readonly logger: Logger;
-  protected constructor(protected readonly model: Model<TDocument>) {}
+  protected constructor(
+    protected readonly model: Model<TDocument>,
+    private readonly connection: Connection,
+  ) {}
 
   async create(document: Omit<TDocument, '_id'>): Promise<TDocument> {
     const createdDocument = new this.model({
@@ -63,5 +66,11 @@ export abstract class AbstractDatabaseRepository<
 
   async createIndex(options: CreateIndexesOptions) {
     return this.model.createIndexes(options as any);
+  }
+
+  async startTransaction() {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+    return session;
   }
 }
