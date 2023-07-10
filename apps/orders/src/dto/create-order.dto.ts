@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsNumber, IsPositive, IsString } from 'class-validator';
+import { IsNotEmpty, IsPositive, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateOrderDto {
   @IsString()
@@ -7,6 +8,7 @@ export class CreateOrderDto {
 
   @IsNotEmpty()
   @IsPositive()
+  @Type(() => Number)
   price: number;
 
   @IsString()
