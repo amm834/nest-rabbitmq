@@ -5,6 +5,7 @@ import * as Joi from 'joi';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Order, OrderSchema } from './schemas/order.schema';
+import { OrderRepository } from './repositories';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import { Order, OrderSchema } from './schemas/order.schema';
     ]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, OrderRepository],
 })
 export class AppModule {}
