@@ -11,6 +11,7 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto';
 import { JwtAuthGuard, LocalAuthGuard } from './guards';
 import { CurrentUser } from './decoratos';
+import { MessagePattern } from '@nestjs/microservices';
 
 @Controller('auth')
 export class AuthController {
@@ -36,5 +37,13 @@ export class AuthController {
   @Get('profile')
   getProfile(@CurrentUser() user) {
     return user;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @MessagePattern('validate_user')
+  async validateUser(@CurrentUser() user) {
+    return {
+      status: 'success',
+    };
   }
 }

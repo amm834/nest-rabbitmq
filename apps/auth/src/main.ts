@@ -13,7 +13,7 @@ async function bootstrap() {
     }),
   );
   const rmqService = app.get(RmqService);
-  app.connectMicroservice(rmqService.getOptions('AUTH'));
+  app.connectMicroservice(rmqService.getOptions('AUTH', true));
   await app.startAllMicroservices();
   await app.listen(3001);
 }

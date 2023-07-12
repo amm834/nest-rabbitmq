@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
 import { CreateOrderDto } from './dto';
+import { JwtAuthGuard } from '@app/common';
 
 @Controller('orders')
 export class AppController {
@@ -11,8 +12,12 @@ export class AppController {
     return this.appService.getOrders();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
-  createOrder(@Body() createOrderDto: CreateOrderDto) {
-    return this.appService.createOrder(createOrderDto);
+  createOrder(@Body() createOrderDto: CreateOrderDto, @Req() req: any) {
+    return this.appService.createOrder(
+      createOrderDto,
+      req?.cookies?.Authentication,
+    );
   }
 }
